@@ -18,8 +18,10 @@ export default function AnimeLayout({
         <SearchAnime />
       </div>
       <div>{children}</div>
-      <div className="flex justify-center items-center bg-slate-900 text-white">
-        <h1 className="p-8">copyright by rizqi</h1>
+      <div className="relative bottom-0">
+        <div className="flex justify-center items-center bg-slate-900 text-white">
+          <h1 className="p-8">copyright by rizqi</h1>
+        </div>
       </div>
     </>
   );

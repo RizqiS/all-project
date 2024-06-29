@@ -75,7 +75,18 @@ export async function withSwrPatch(url: string, { data }: { data: PutRequestArgs
 }
 
 export async function getJikanAnime(url: string, query?: string) {
-  const res = await fetch(`${url}?${query}`, { cache: "no-store", next: { tags: ["jikan"] } });
+  const res = await fetch(`${url}?${query}`, {
+    cache: "no-store",
+    next: { tags: ["jikan"] },
+  });
+  return res.json();
+}
+
+export async function getJikanAnimeCache(url: string, query?: string) {
+  const res = await fetch(`${url}?${query}`, {
+    cache: "force-cache",
+    next: { tags: ["jikan"] },
+  });
   return res.json();
 }
 

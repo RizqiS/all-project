@@ -1,7 +1,5 @@
 "use client";
 
-import { getJikanAnime, urlJikan } from "@/lib/fetch";
-import { AnimeDataJikan } from "@/types/jikan/anime.type";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { Input } from "../../ui/input";
@@ -9,15 +7,22 @@ import { Search } from "lucide-react";
 import { Button } from "../../ui/button";
 import { useRouter } from "next/navigation";
 import { useSearch } from "@/hooks/search-hooks";
+import Link from "next/link";
 
 export default function SearchAnime() {
-  const { anime, query, loading, setQuery } = useSearch();
+  const { anime, query, loading, setQuery, clearPreviewData } = useSearch();
   const refInput = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   const queryOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setQuery(value);
+  };
+
+  const goToDetailClickHandler = (params: { mal_id: number; title: string }) => {
+    const { mal_id, title } = params;
+    router.push(`/anime/${mal_id}/${title}`);
+    clearPreviewData();
   };
 
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -28,7 +33,7 @@ export default function SearchAnime() {
       router.push(`/anime/search?keyword=${keywordValue}`);
     }
 
-    setQuery("");
+    clearPreviewData();
   };
 
   return (
@@ -63,20 +68,25 @@ export default function SearchAnime() {
                   key={Math.random() * item.mal_id}
                   className="flex items-center border max-w-sm rounded-2xl overflow-hidden shadow"
                 >
-                  <div className="w-max p-2">
-                    <Image
-                      src={item.images.webp.large_image_url}
-                      alt={item.title}
-                      width={100}
-                      height={100}
-                      priority
-                      className="w-16 h-16 object-cover rounded-lg"
-                    />
-                  </div>
-                  <div className="w-1/2">
-                    <h1 className="text-md font-bold">{item.title}</h1>
-                    <p className="line-clamp-1 text-xs">{item.synopsis}</p>
-                  </div>
+                  <button
+                    className="border-none flex items-center border max-w-sm rounded-2xl overflow-hidden shadow"
+                    onClick={goToDetailClickHandler.bind(null, { mal_id: item.mal_id, title: item.title })}
+                  >
+                    <div className="w-max p-2">
+                      <Image
+                        src={item.images.webp.large_image_url}
+                        alt={item.title}
+                        width={100}
+                        height={100}
+                        priority
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+                    </div>
+                    <div className="w-1/2">
+                      <h1 className="text-md font-bold">{item.title}</h1>
+                      <p className="line-clamp-1 text-xs">{item.synopsis}</p>
+                    </div>
+                  </button>
                 </li>
               ))}
             </ul>

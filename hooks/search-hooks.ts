@@ -26,5 +26,11 @@ export function useSearch() {
     return () => clearTimeout(timer);
   }, [query]);
 
-  return { query, loading, anime, setQuery };
+  const clearPreviewData = () => {
+    setQuery("");
+    setLoading(false);
+    setAnime([]);
+  };
+
+  return { query, loading, anime, clearPreviewData, setQuery };
 }
